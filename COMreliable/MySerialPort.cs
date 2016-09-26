@@ -18,6 +18,7 @@ namespace COMreliable
         {
             _sPort = sPort;
             openPort();
+            startThread();
         }
         
         public void Dispose()
@@ -37,7 +38,6 @@ namespace COMreliable
                 _serialPort.Open();
                 _serialPort.DataReceived += new SerialDataReceivedEventHandler(_serialPort_DataReceived);
                 _serialPort.ErrorReceived += new SerialErrorReceivedEventHandler(_serialPort_ErrorReceived);
-                startThread();
                 this.onUpdateMessage(new mySerialEventArgs("port opened"));
             }
             catch (Exception ex)
@@ -54,10 +54,10 @@ namespace COMreliable
             {
                 try
                 {
-                    System.Diagnostics.Debug.WriteLine("...keepalive");
                     count++;
                     if (count == max)
                     {
+                        System.Diagnostics.Debug.WriteLine("...keepalive");
                         this.writeCOM(new byte[] { 0 });
                         count = 0;
                     }
@@ -69,11 +69,13 @@ namespace COMreliable
                 }
                 catch (SystemException ex)
                 {
+                    System.Diagnostics.Debug.WriteLine("...SystemException");
                     closePort();
                     openPort();
                 }
                 catch (Exception ex)
                 {
+                    System.Diagnostics.Debug.WriteLine("...Exception");
                     //restart
                     closePort();
                     openPort();
