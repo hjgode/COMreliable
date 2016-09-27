@@ -21,6 +21,12 @@ namespace COMreliable
         {
             _mySerialPort = new MySerialPort("COM9:");
             _mySerialPort.eventOnMessage += new MySerialPort.delegateOnMessage(_mySerialPort_eventOnMessage);
+            _mySerialPort.eventOnConnectEvent += new MySerialPort.delegateOnConnect(_mySerialPort_eventOnConnectEvent);
+        }
+
+        void _mySerialPort_eventOnConnectEvent(object sender, MySerialPort.mySerialConnectArgs e)
+        {
+            addLog(e.connEvent == MySerialPort.connectEvent.connected ? "connected" : "disconnected");
         }
 
         void _mySerialPort_eventOnMessage(object sender, MySerialPort.mySerialEventArgs e)
